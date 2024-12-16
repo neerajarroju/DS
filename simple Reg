@@ -1,0 +1,11 @@
+  data(mtcars)
+  model <- lm(mpg ~ hp, data = mtcars)
+  summary(model)
+  plot(mtcars$hp, mtcars$mpg, 
+       main = "Horsepower vs MPG", 
+       xlab = "Horsepower (hp)", 
+       ylab = "Miles Per Gallon (mpg)"
+       )
+  abline(model, col = "orange")
+  new_hp <- data.frame(hp = c(100, 150, 200))
+  predict(model, newdata = new_hp)
