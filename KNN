@@ -1,0 +1,25 @@
+install.packages("caret")
+library('class')
+library('caret')
+
+diabetes <- read.csv("https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv", header = FALSE)
+colnames(diabetes) <- c("Pregnancies", "Glucose", "BloodPressure", "SkinThickness", 
+                        "Insulin", "BMI", "DiabetesPedigree", "Age", "Outcome")
+diabetes <- na.omit(diabetes)
+
+View(diabetes)
+str(diabetes)
+summary(diabetes)
+
+train <- diabetes[1:500, ]
+test <- diabetes[501:768, ]
+
+k <- 2
+pred_test <- knn(train[,-9], test[,-9], train$Outcome, k = 2)
+pred_test
+
+confusion_matrix <- table(Predicted = pred_test, Actual = test$Outcome)
+print(confusion_matrix)
+
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+print(paste("Accuracy:", round(accuracy * 100, 2), "%"))
