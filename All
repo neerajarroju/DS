@@ -1,0 +1,70 @@
+  data(mtcars)
+  model <- lm(mpg ~ hp, data = mtcars)
+  summary(model)
+  plot(mtcars$hp, mtcars$mpg, 
+       main = "Horsepower vs MPG", 
+       xlab = "Horsepower (hp)", 
+       ylab = "Miles Per Gallon (mpg)"
+       )
+  abline(model, col = "orange")
+  new_hp <- data.frame(hp = c(100, 150, 200))
+  predict(model, newdata = new_hp)
+
+
+data(mtcars)
+model <- lm(mpg ~ hp + wt + drat, data = mtcars)
+summary(model)
+par(mfrow = c(2, 2))
+plot(model)
+new_data <- data.frame(hp = c(110, 150, 200), wt = c(2.5, 3.0, 3.5), drat = c(3.5, 3.9, 4.1))
+predicted_mpg <- predict(model, newdata = new_data)
+print(predicted_mpg)
+
+
+mydata <- read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
+head(mydata)
+summary(mydata)
+mydata$rank <- factor(mydata$rank)
+mylogit <- glm(admit~gre+gpa+rank,data = mydata,family="binomial")
+summary(mylogit)
+new_data= data.frame(gre=650,gpa=4.01,rank=2)
+pred <- predict(mylogit,newdata=new_data,type="response")
+pred
+plot(mydata$gre,mydata$pred)
+
+
+install.packages('factoextra')
+library(factoextra)
+library(cluster)
+df<-USArrests
+df<-na.omit(df)
+df<-scale(df)
+fviz_nbclust(df,kmeans,method='wss')
+set.seed(1)
+km<-kmeans(df,centers = 4,nstart = 25)
+km
+fviz_cluster(km,data = df)
+aggregate(USArrests,by=list(cluster=km$cluster),mean)
+final_data<-cbind(USArrests,cluster=km$cluster)
+head(final_data)
+
+
+install.packages("caret")
+library('class')
+library('caret')
+diabetes <- read.csv("https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv", header = FALSE)
+colnames(diabetes) <- c("Pregnancies", "Glucose", "BloodPressure", "SkinThickness", 
+                        "Insulin", "BMI", "DiabetesPedigree", "Age", "Outcome")
+diabetes <- na.omit(diabetes)
+View(diabetes)
+str(diabetes)
+summary(diabetes)
+train <- diabetes[1:500, ]
+test <- diabetes[501:768, ]
+k <- 2
+pred_test <- knn(train[,-9], test[,-9], train$Outcome, k = 2)
+pred_test
+confusion_matrix <- table(Predicted = pred_test, Actual = test$Outcome)
+print(confusion_matrix)
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+print(paste("Accuracy:", round(accuracy * 100, 2), "%"))
